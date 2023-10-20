@@ -7,11 +7,20 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "reactapp", "reactapp\reacta
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webapi", "webapi\webapi.csproj", "{4F20F7A3-DEAC-4EF6-8055-BB2AF644E18D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "webapi.Core", "webapi.Core\webapi.Core.csproj", "{81BCCEF5-162F-45F3-9E9D-E32322C666D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webapi.Core", "webapi.Core\webapi.Core.csproj", "{81BCCEF5-162F-45F3-9E9D-E32322C666D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "webapi.Infrastructure", "webapi.Infrastructure\webapi.Infrastructure.csproj", "{658163DF-EDF0-4A0E-B175-C6EBFC57E55B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webapi.Infrastructure", "webapi.Infrastructure\webapi.Infrastructure.csproj", "{658163DF-EDF0-4A0E-B175-C6EBFC57E55B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "webapi.Application", "webapi.Application\webapi.Application.csproj", "{69842AB9-EC1D-4945-9E3D-0A50DADB899A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webapi.Application", "webapi.Application\webapi.Application.csproj", "{69842AB9-EC1D-4945-9E3D-0A50DADB899A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database_files", "database_files", "{1C3D54F4-3F97-44D5-93DF-8AC5A620D825}"
+	ProjectSection(SolutionItems) = preProject
+		database_files\BasicCMS[Tables].sql = database_files\BasicCMS[Tables].sql
+		database_files\CreateNewUser[SP].sql = database_files\CreateNewUser[SP].sql
+		database_files\ObtenerArticulosPaginados[SP].sql = database_files\ObtenerArticulosPaginados[SP].sql
+		database_files\readme.txt = database_files\readme.txt
+		database_files\UpdateUserPassword[SP].sql = database_files\UpdateUserPassword[SP].sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
