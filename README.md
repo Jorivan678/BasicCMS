@@ -14,4 +14,4 @@ but I won't be responsible for what happens if you use this project.
 
 - React (Typescript)
 
-> This project don't uses database first, instead, as you can see, it's database first and uses dapper.
+> This project don't uses code first, instead, as you can see, it's database first and uses dapper.
