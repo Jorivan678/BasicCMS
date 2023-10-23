@@ -7,8 +7,9 @@
 CREATE OR REPLACE FUNCTION ObtenerArticulosPaginados
 (
 	IN pagina_ int,
-	IN cantidad_ int = 10,
-	IN autorId_ int = 0
+	IN cantidad_ int default 10,
+	IN autorId_ int default 0,
+	IN categorias_ varchar[] = null
 )
 RETURNS TABLE (
 	id int,
@@ -25,22 +26,16 @@ RETURNS TABLE (
 LANGUAGE plpgsql
 AS $$
 BEGIN
-	IF autorId_ = 0 THEN
-		RETURN QUERY
-		SELECT ar.*, false as split, u.nombre, u.apellidop, u.apellidom, u.nombreusuario FROM articulos AS ar
-		INNER JOIN usuarios AS u ON u.id = ar.autorid 
-		ORDER BY ar.id DESC
-		LIMIT cantidad_
-		OFFSET (pagina_ - 1) * cantidad_;
-		
-	ELSE
-		RETURN QUERY
-		SELECT ar.*, false as split, u.nombre, u.apellidop, u.apellidom, u.nombreusuario FROM articulos AS ar
-		INNER JOIN usuarios AS u ON u.id = ar.autorid
-		WHERE ar.autorid = autorid_
-		ORDER BY ar.id DESC
-		LIMIT cantidad_
-		OFFSET (pagina_ - 1) * cantidad_;
-	END IF;
+	RETURN QUERY
+	SELECT DISTINCT ar.*, false as split, ''::character varying as nombre, ''::character varying as apellidop, ''::character varying as apellidom, u.nombreusuario 
+	FROM articulos AS ar
+	LEFT JOIN usuarios AS u ON u.id = ar.autorid
+	LEFT JOIN articulos_categorias AS ac ON ar.id = ac.articuloid
+	LEFT JOIN categorias AS c ON c.id = ac.categoriaid
+	WHERE (autorId_ = 0 OR ar.autorid = autorId_)
+	AND (categorias_ IS NULL OR c.nombre = ANY(categorias_))
+	ORDER BY ar.id DESC
+	LIMIT cantidad_
+	OFFSET (pagina_ - 1) * cantidad_;
 END;
 $$;
