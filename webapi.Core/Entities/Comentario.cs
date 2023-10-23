@@ -12,8 +12,6 @@ namespace webapi.Core.Entities
 
         public int ArticuloId { get; set; }
 
-        public Usuario Autor { get; set; } = null!;
-
         public Articulo Articulo { get; set; } = null!;
     }
 }
