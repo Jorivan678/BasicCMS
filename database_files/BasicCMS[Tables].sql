@@ -22,8 +22,14 @@ CREATE TABLE Usuarios_Roles(
 	UsuarioId int,
 	RoleId int,
 	primary key (UsuarioId, RoleId),
-	foreign key (UsuarioId) references Usuarios(Id),
+	foreign key (UsuarioId) references Usuarios(Id)		
+		match simple
+		on update no action
+		on delete cascade,
 	foreign key (RoleId) references Roles(Id)
+		match simple
+		on update no action
+		on delete cascade,
 );
 
 CREATE TABLE Articulos
@@ -34,6 +40,8 @@ CREATE TABLE Articulos
 	Fecha_Pub timestamp with time zone not null,
 	AutorId int,
 	constraint FK_ArticuloAutor foreign key (AutorId) references Usuarios(Id)
+		match simple
+		on delete set default
 );
 
 CREATE TABLE Categorias(
@@ -71,3 +79,7 @@ CREATE TABLE Comentarios(
 		on update no action
 		on delete cascade
 );
+
+INSERT INTO Roles(Nombre, Descripcion) VALUES ('admin', 'Es el administrado del sistema, tiene acceso a todo.');
+INSERT INTO Roles(Nombre, Descripcion) VALUES ('editor', 'Es un usuario normal pero con la característica de que puede crear artículos.');
+INSERT INTO Roles(Nombre, Descripcion) VALUES ('user', 'Es un usuario normal, sin permisos especiales de ningún tipo.');
