@@ -12,13 +12,13 @@ AS $$
 DECLARE salt varchar(150) default gen_salt('bf', 12);
 DECLARE passwordhashed varchar(900) default crypt(passwordnormal, salt);
 BEGIN
-	IF (SELECT COUNT(*) FROM Usuarios AS U WHERE U.nombreusuario = nombre_usuario) = 0
+	IF (SELECT COUNT(*) FROM USUARIOS AS U WHERE U.nombreusuario = nombre_usuario) = 0
 	THEN
 		INSERT INTO Usuarios(nombre, apellidop, apellidom, nombreusuario, passwordhash, passwordsalt)
-		VALUES (nombre, apellidop, apellidom, nombre_usuario, passwordhashed, salt)
-		RETURNING ID INTO userid;
+		VALUES (nombre, apellidop, apellidom, nombre_usuario, passwordhashed, salt);
+		SELECT U.Id INTO userid FROM Usuarios AS U WHERE U.nombreusuario = nombre_usuario;
 	ELSE
-		RAISE EXCEPTION 'The user with name % already exists.', nombre_usuario;
+		RAISE EXCEPTION 'El usuario con nombre de usuario % ya existe', nombre_usuario;
 	END IF;
 END;
 $$;
