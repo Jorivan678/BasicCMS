@@ -18,6 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database_files", "database_
 		database_files\BasicCMS[Tables].sql = database_files\BasicCMS[Tables].sql
 		database_files\CreateNewUser[SP].sql = database_files\CreateNewUser[SP].sql
 		database_files\ObtenerArticulosPaginados[SP].sql = database_files\ObtenerArticulosPaginados[SP].sql
+		database_files\ObtenerCategoriasPaginadas[SP].sql = database_files\ObtenerCategoriasPaginadas[SP].sql
+		database_files\ObtenerCategoriasPorArticuloId[SP].sql = database_files\ObtenerCategoriasPorArticuloId[SP].sql
+		database_files\ObtenerRolesPorUsuarioId[SP].sql = database_files\ObtenerRolesPorUsuarioId[SP].sql
 		database_files\readme.txt = database_files\readme.txt
 		database_files\UpdateUserPassword[SP].sql = database_files\UpdateUserPassword[SP].sql
 	EndProjectSection
