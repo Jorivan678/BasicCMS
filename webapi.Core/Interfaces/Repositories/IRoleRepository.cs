@@ -11,6 +11,13 @@ namespace webapi.Core.Interfaces.Repositories
         Task<IEnumerable<Rol>> GetRolesAsync();
 
         /// <summary>
+        /// Gets a role by <paramref name="roleId"/>.
+        /// </summary>
+        /// <param name="roleId">The role id.</param>
+        /// <returns>An instance of <see cref="Rol"/> if exists, otherwise, it'll be <see langword="null"/>.</returns>
+        Task<Rol?> FindAsync(int roleId);
+
+        /// <summary>
         /// Updates an existing role in the database (just the description).
         /// </summary>
         /// <param name="rol"></param>

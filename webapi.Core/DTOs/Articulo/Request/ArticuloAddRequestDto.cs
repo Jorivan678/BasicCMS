@@ -1,6 +1,6 @@
 ﻿using webapi.Core.DTOs.Categoria.Request;
 
-namespace webapi.Core.DTOs
+namespace webapi.Core.DTOs.Articulo.Request
 {
     public class ArticuloAddRequestDto
     {

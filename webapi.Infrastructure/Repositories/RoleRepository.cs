@@ -17,6 +17,21 @@ namespace webapi.Infrastructure.Repositories
             _logger = logger;
         }
 
+        public async Task<Rol?> FindAsync(int roleId)
+        {
+            try
+            {
+                const string sql = "SELECT * FROM Roles WHERE id = @roleId";
+
+                return await _context.Connection.QueryFirstOrDefaultAsync<Rol>(sql, new { roleId });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during the query of a role by id: \n Date and time: {fecha}", DateTimeOffset.UtcNow.ToString("G"));
+                throw new Exception("An error occurred during searching the role.", ex);
+            }
+        }
+
         public async Task<IEnumerable<Rol>> GetRolesAsync()
         {
             try
@@ -36,9 +51,9 @@ namespace webapi.Infrastructure.Repositories
         {
             try
             {
-                const string sql = "UPDATE Roles SET descripcion = @Descripcion WHERE id = @RoleId";
+                const string sql = "UPDATE Roles SET descripcion = @Descripcion WHERE id = @Id";
 
-                int rows = await _context.Connection.ExecuteAsync(sql, new { rol.Descripcion, RoleId = rol.Id });
+                int rows = await _context.Connection.ExecuteAsync(sql, rol);
 
                 return rows > 0;
             }
