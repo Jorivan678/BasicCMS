@@ -1,4 +1,5 @@
 ﻿using webapi.Core.Entities;
+using webapi.Core.StaticData;
 using webapi.Core.Interfaces.Repositories.Base;
 
 namespace webapi.Core.Interfaces.Repositories
@@ -22,6 +23,18 @@ namespace webapi.Core.Interfaces.Repositories
         /// <param name="quantity">Quantity of elements per page.</param>
         /// <returns>A list of <see cref="Usuario"/>.</returns>
         Task<IEnumerable<Usuario>> GetUsersAsync(int page, int quantity);
+
+        /// <summary>
+        /// Gets users who have <see cref="Roles.Editor"/> as a role.
+        /// </summary>
+        /// <returns>A list of <see cref="Usuario"/>.</returns>
+        Task<IEnumerable<Usuario>> GetUsersAuthorsAsync();
+
+        /// <summary>
+        /// Gets total users count in the database.
+        /// </summary>
+        /// <returns>Users count.</returns>
+        Task<int> CountUsersAsync();
 
         /// <summary>
         /// Checks if user name already exists in the database.

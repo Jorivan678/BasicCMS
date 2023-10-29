@@ -11,7 +11,7 @@ namespace webapi.Core.Interfaces.Services
         /// </summary>
         /// <param name="request">Contains the add request info.</param>
         /// <returns>The new category id.</returns>
-        Task<int> CreateAsync(CategoriaUpdRequestDto request);
+        Task<int> CreateAsync(CategoriaAddRequestDto request);
 
         /// <summary>
         /// Updates an existing category.
@@ -26,5 +26,11 @@ namespace webapi.Core.Interfaces.Services
         /// <param name="quantity">Quantity of elements per page.</param>
         /// <returns>A list of categories.</returns>
         Task<IEnumerable<CategoriaResponseDto>> GetCategoriesAsync(int page, int quantity);
+
+        /// <summary>
+        /// Gets total categories count in the database.
+        /// </summary>
+        /// <returns>Categories count.</returns>
+        Task<int> CountCategoriesAsync();
     }
 }

@@ -15,9 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webapi.Application", "webap
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database_files", "database_files", "{1C3D54F4-3F97-44D5-93DF-8AC5A620D825}"
 	ProjectSection(SolutionItems) = preProject
+		database_files\AsignarRolAUsuario[SP].sql = database_files\AsignarRolAUsuario[SP].sql
 		database_files\BasicCMS[Tables].sql = database_files\BasicCMS[Tables].sql
 		database_files\CreateNewUser[SP].sql = database_files\CreateNewUser[SP].sql
 		database_files\ObtenerArticulosPaginados[SP].sql = database_files\ObtenerArticulosPaginados[SP].sql
+		database_files\ObtenerCantidadArticulos[SP] .sql = database_files\ObtenerCantidadArticulos[SP] .sql
 		database_files\ObtenerCategoriasPaginadas[SP].sql = database_files\ObtenerCategoriasPaginadas[SP].sql
 		database_files\ObtenerCategoriasPorArticuloId[SP].sql = database_files\ObtenerCategoriasPorArticuloId[SP].sql
 		database_files\ObtenerRolesPorUsuarioId[SP].sql = database_files\ObtenerRolesPorUsuarioId[SP].sql

@@ -16,5 +16,12 @@ namespace webapi.Core.Interfaces.Services
         /// </summary>
         /// <param name="request">Contains update request info.</param>
         Task UpdateAsync(RoleUpdRequestDto request);
+
+        /// <summary>
+        /// Gets a role by <paramref name="roleId"/>.
+        /// </summary>
+        /// <param name="roleId">The role id.</param>
+        /// <returns>An instance of <see cref="RoleResponseDto"/>.</returns>
+        Task<RoleResponseDto> GetRoleAsync(int roleId);
     }
 }

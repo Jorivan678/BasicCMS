@@ -33,7 +33,7 @@ BEGIN
 	LEFT JOIN articulos_categorias AS ac ON ar.id = ac.articuloid
 	LEFT JOIN categorias AS c ON c.id = ac.categoriaid
 	WHERE (autorId_ = 0 OR ar.autorid = autorId_)
-	AND (categorias_ IS NULL OR c.nombre = ANY(categorias_))
+	AND (categorias_ IS NULL OR UPPER(c.nombre) = ANY(categorias_))
 	ORDER BY ar.id DESC
 	LIMIT cantidad_
 	OFFSET (pagina_ - 1) * cantidad_;

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Microsoft.Extensions.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using webapi.Infrastructure.Data;
 
 namespace webapi.Infrastructure.Options
@@ -8,18 +9,50 @@ namespace webapi.Infrastructure.Options
     /// </summary>
     public sealed class AppDbOptions
     {
-        public string ConnectionString { get; private set; } = null!;
+        private readonly IConfiguration _config;
+        private string _connStrKey = null!;
+
+        public AppDbOptions(IConfiguration config)
+        {
+            _config = config;
+        }
 
         /// <summary>
-        /// Sets the connection string.
+        /// Gets the connection string.
         /// </summary>
-        /// <param name="connectionString">The connection string.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public void SetConnString([NotNull]string? connectionString)
-        {
-            ArgumentException.ThrowIfNullOrEmpty("Connection string cannot be empty.", nameof(connectionString));
+        public string ConnectionString { 
+            get
+            {
+                var connStr = _config.GetConnectionString(_connStrKey);
+                if (string.IsNullOrWhiteSpace(connStr)) throw new InvalidOperationException("There isn't a connection string ");
 
-            ConnectionString = connectionString!;
+                return connStr;
+            }
+        }
+
+        /// <summary>
+        /// Sets the connection string key for get from the "ConnectionStrings" section in the appsettings.json file.
+        /// </summary>
+        /// <param name="connKey">The name of the connection string key in the specified section of appsettings.json.</param>
+        /// <remarks>
+        /// Here's an example of how to use the SetConnStrKey method:
+        /// <code>
+        /// dbOptions.SetConnStrKey("DbConnection");
+        /// </code>
+        /// Where "DbConnection is in:
+        /// <code>
+        ///   "ConnectionStrings": {
+        ///      "DbConnection": "a connection string"
+        ///    }
+        /// </code>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException"></exception>
+        public void SetConnStrKey([NotNull]string? connKey)
+        {
+            if (string.IsNullOrWhiteSpace(connKey))
+                throw new ArgumentNullException(nameof(connKey), "Connection string key cannot be null or empty.");
+
+            _connStrKey = connKey;
         }
     }
 }

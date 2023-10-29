@@ -4,7 +4,6 @@ using webapi.Core.Entities;
 using webapi.Core.Interfaces.Repositories;
 using webapi.Infrastructure.Data;
 using System.Data;
-using System.Text;
 using System.Data.Common;
 
 namespace webapi.Infrastructure.Repositories
@@ -27,9 +26,7 @@ namespace webapi.Infrastructure.Repositories
                 const string sql = @"INSERT INTO Articulos(titulo, contenido, fecha_pub, autorid)
                     VALUES(@Titulo, @Contenido, @Fecha_Pub, @AutorId) RETURNING ID";
 
-                var parametros = new { entity.Titulo, entity.Contenido, entity.Fecha_Pub, entity.AutorId };
-
-                var newId = await _context.Connection.ExecuteScalarAsync<int>(sql, parametros);
+                var newId = await _context.Connection.ExecuteScalarAsync<int>(sql, entity);
 
                 await AddRelationsAsync(newId);
 
@@ -45,15 +42,12 @@ namespace webapi.Infrastructure.Repositories
             {
                 if (entity.Categorias.Count > 0)
                 {
-                    StringBuilder sql = new(string.Empty);
-
-                    foreach (var item in entity.Categorias)
-                        sql.Append($"INSERT INTO articulos_categorias(articuloid, categoriaid) VALUES({artId}, {item.Id});");
+                    const string sql = "INSERT INTO articulos_categorias(articuloid, categoriaid) VALUES(@artId, @catId)";
 
                     await using var transaction = await _context.Connection.BeginTransactionAsync(IsolationLevel.ReadCommitted);
                     try
                     {
-                        await _context.Connection.ExecuteAsync(sql.ToString(), transaction: transaction);
+                        await _context.Connection.ExecuteAsync(sql, entity.Categorias.Select(x => new { artId, catId = x.Id }), transaction: transaction);
                     }
                     catch
                     {
@@ -188,7 +182,7 @@ namespace webapi.Infrastructure.Repositories
         {
             try
             {
-                const string sql = "SELECT * FROM public.obtenerarticulospaginados(@page, @quantity, 0, @categories)";
+                const string sql = "SELECT * FROM public.obtenerarticulospaginados(@page, @quantity, 0, UPPER(@categories))";
 
                 var articulos = await _context.Connection.QueryAsync<Articulo, Usuario, Articulo>(sql, (ar, u) =>
                 {
@@ -218,7 +212,7 @@ namespace webapi.Infrastructure.Repositories
         {
             try
             {
-                const string sql = "SELECT * FROM public.obtenerarticulospaginados(@page, @quantity, @authorId, @categories)";
+                const string sql = "SELECT * FROM public.obtenerarticulospaginados(@page, @quantity, @authorId, UPPER(@categories))";
 
                 var articulos = await _context.Connection.QueryAsync<Articulo, Usuario, Articulo>(sql, (ar, u) =>
                 {
@@ -260,7 +254,7 @@ namespace webapi.Infrastructure.Repositories
                 }
 
                 // Ahora, actualiza las categorías del artículo
-                await UpdateCategoriasAsync(entity.Id, entity.Categorias, transaction);
+                await UpdateCategoriasAsync(transaction);
 
                 await transaction.CommitAsync();
 
@@ -272,37 +266,91 @@ namespace webapi.Infrastructure.Repositories
                 _logger.LogError(ex, "An error occurred during the article update operation: \n Date and time: {fecha}", DateTimeOffset.UtcNow.ToString("G"));
                 throw new Exception("An error occurred during the article update operation.", ex);
             }
+
+            async Task UpdateCategoriasAsync(DbTransaction transaction)
+            {
+                // Obtén las categorías actuales del artículo
+                var currentCategorias = await GetCategoriasAsync(entity.Id);
+
+                // Encuentra las categorías que deben ser agregadas
+                var categoriasToAdd = entity.Categorias.Except(currentCategorias);
+
+                // Encuentra las categorías que deben ser eliminadas
+                var categoriasToRemove = currentCategorias.Except(entity.Categorias);
+
+                // Agrega nuevas categorías
+                if (categoriasToAdd.Any())
+                {
+                    const string insertCategoriaSql = @"INSERT INTO articulos_categorias(articuloid, categoriaid) VALUES (@ArticuloId, @CategoriaId)";
+                    await _context.Connection.ExecuteAsync(insertCategoriaSql, categoriasToAdd.Select(c => new { ArticuloId = entity.Id, CategoriaId = c.Id }), transaction);
+                }
+
+                // Elimina categorías obsoletas
+                if (categoriasToRemove.Any())
+                {
+                    const string deleteCategoriaSql = @"DELETE FROM articulos_categorias WHERE articuloid = @ArticuloId AND categoriaid = @CategoriaId";
+                    await _context.Connection.ExecuteAsync(deleteCategoriaSql, categoriasToRemove.Select(c => new { ArticuloId = entity.Id, CategoriaId = c.Id }), transaction);
+                }
+            }
         }
 
-        /// <summary>
-        /// Updates the relation between categories and a specific article.
-        /// </summary>
-        /// <param name="articuloId">The related article.</param>
-        /// <param name="newCategorias">The categories received.</param>
-        /// <param name="transaction">A database transaction.</param>
-        private async Task UpdateCategoriasAsync(int articuloId, ICollection<Categoria> newCategorias, DbTransaction transaction)
+        public async Task<int> CountArticulosAsync()
         {
-            // Obtén las categorías actuales del artículo
-            var currentCategorias = await GetCategoriasAsync(articuloId);
-
-            // Encuentra las categorías que deben ser agregadas
-            var categoriasToAdd = newCategorias.Except(currentCategorias).ToList();
-
-            // Encuentra las categorías que deben ser eliminadas
-            var categoriasToRemove = currentCategorias.Except(newCategorias).ToList();
-
-            // Agrega nuevas categorías
-            if (categoriasToAdd.Any())
+            try
             {
-                const string insertCategoriaSql = @"INSERT INTO articulos_categorias(articuloid, categoriaid) VALUES (@ArticuloId, @CategoriaId)";
-                await _context.Connection.ExecuteAsync(insertCategoriaSql, categoriasToAdd.Select(c => new { ArticuloId = articuloId, CategoriaId = c.Id }), transaction);
+                const string sql = "SELECT * FROM ObtenerCantidadArticulos()";
+
+                return await _context.Connection.ExecuteScalarAsync<int>(sql);
             }
-
-            // Elimina categorías obsoletas
-            if (categoriasToRemove.Any())
+            catch (Exception ex)
             {
-                const string deleteCategoriaSql = @"DELETE FROM articulos_categorias WHERE articuloid = @ArticuloId AND categoriaid = @CategoriaId";
-                await _context.Connection.ExecuteAsync(deleteCategoriaSql, categoriasToRemove.Select(c => new { ArticuloId = articuloId, CategoriaId = c.Id }), transaction);
+                _logger.LogError(ex, "An error occurred during the count of articles from database: \n Date and time: {fecha}", DateTimeOffset.UtcNow.ToString("G"));
+                throw new Exception("An error occurred during the request of articles count.", ex);
+            }
+        }
+
+        public async Task<int> CountArticulosAsync(int authorId)
+        {
+            try
+            {
+                const string sql = "SELECT * FROM ObtenerCantidadArticulos(@authorId)";
+
+                return await _context.Connection.ExecuteScalarAsync<int>(sql, new { authorId });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during the count of articles from database: \n Date and time: {fecha}", DateTimeOffset.UtcNow.ToString("G"));
+                throw new Exception("An error occurred during the request of articles count.", ex);
+            }
+        }
+
+        public async Task<int> CountArticulosAsync(string[] categories)
+        {
+            try
+            {
+                const string sql = "SELECT * FROM ObtenerCantidadArticulos(0, UPPER(@categories))";
+
+                return await _context.Connection.ExecuteScalarAsync<int>(sql, new { categories });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during the count of articles from database: \n Date and time: {fecha}", DateTimeOffset.UtcNow.ToString("G"));
+                throw new Exception("An error occurred during the request of articles count.", ex);
+            }
+        }
+
+        public async Task<int> CountArticulosAsync(string[] categories, int authorId)
+        {
+            try
+            {
+                const string sql = "SELECT * FROM ObtenerCantidadArticulos(@authorId, UPPER(@categories))";
+
+                return await _context.Connection.ExecuteScalarAsync<int>(sql, new { authorId, categories });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during the count of articles from database: \n Date and time: {fecha}", DateTimeOffset.UtcNow.ToString("G"));
+                throw new Exception("An error occurred during the request of articles count.", ex);
             }
         }
 

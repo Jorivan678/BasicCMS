@@ -1,7 +1,7 @@
 ﻿namespace webapi.Core.StaticData
 {
     /// <summary>
-    /// En esta clase están los roles de la aplicación.
+    /// This class contains application roles.
     /// </summary>
     public static class Roles
     {

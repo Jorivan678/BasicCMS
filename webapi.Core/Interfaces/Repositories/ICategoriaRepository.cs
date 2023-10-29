@@ -17,6 +17,12 @@ namespace webapi.Core.Interfaces.Repositories
         Task<IEnumerable<Categoria>> GetCategoriasAsync(int page, int quantity);
 
         /// <summary>
+        /// Gets total categories count in the database.
+        /// </summary>
+        /// <returns>Categories count.</returns>
+        Task<int> CountCategoriesAsync();
+
+        /// <summary>
         /// Checks if category name already exists in the database.
         /// </summary>
         /// <param name="categoryName">The category name to check.</param>
