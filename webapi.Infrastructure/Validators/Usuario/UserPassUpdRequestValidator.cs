@@ -4,7 +4,7 @@ using webapi.Core.StaticData;
 
 namespace webapi.Infrastructure.Validators.Usuario
 {
-    internal class UserPassUpdRequestValidator : AbstractValidator<UserPassUpdateDto>
+    public sealed class UserPassUpdRequestValidator : AbstractValidator<UserPassUpdateDto>
     {
         public UserPassUpdRequestValidator()
         {

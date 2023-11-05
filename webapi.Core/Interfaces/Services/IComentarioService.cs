@@ -1,4 +1,5 @@
-﻿using webapi.Core.DTOs.Comentario.Request;
+﻿using webapi.Core.Exceptions;
+using webapi.Core.DTOs.Comentario.Request;
 using webapi.Core.DTOs.Comentario.Response;
 using webapi.Core.Interfaces.Services.Base;
 
@@ -17,6 +18,8 @@ namespace webapi.Core.Interfaces.Services
         /// Updates an existing comment.
         /// </summary>
         /// <param name="request">Contains the update request info.</param>
+        /// <exception cref="UnprocessableEntityException"></exception>
+        /// <exception cref="ForbiddenException"></exception>
         Task UpdateAsync(ComentarioUpdRequestDto request);
 
         /// <summary>

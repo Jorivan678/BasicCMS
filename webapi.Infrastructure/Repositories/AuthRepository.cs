@@ -19,12 +19,12 @@ namespace webapi.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<bool> AssignRoleAsync(int userId, int roleId)
+        public async Task<bool> AssignRoleAsync(int userid, int rolid)
         {
-            await using var transact = await _context.Connection.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+            await using var transact = await _context.BeginTransactionAsync(IsolationLevel.ReadCommitted);
             try
             {
-                var parametros = new DynamicParameters(new { userId, rolId = roleId });
+                var parametros = new DynamicParameters(new { userid, rolid });
                 parametros.Add("rows_affected", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
                 await _context.Connection.ExecuteAsync("AsignarRolAUsuario", parametros, transact, commandType: CommandType.StoredProcedure);
@@ -80,7 +80,7 @@ namespace webapi.Infrastructure.Repositories
 
         public async Task<bool> RemoveRoleAsync(int userId, int roleId)
         {
-            await using var transact = await _context.Connection.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+            await using var transact = await _context.BeginTransactionAsync(IsolationLevel.ReadCommitted);
             try
             {
                 const string sql = "DELETE FROM Usuarios_Roles WHERE usuarioid = @userId AND roleid = @roleId";
@@ -107,7 +107,7 @@ namespace webapi.Infrastructure.Repositories
 
         public async Task<bool> UpdatePasswordAsync(int userId, string newPassword)
         { 
-            await using var transact = await _context.Connection.BeginTransactionAsync();
+            await using var transact = await _context.BeginTransactionAsync(IsolationLevel.ReadCommitted);
             try
             {
                 var parametros = new DynamicParameters(new { userid = userId, newpassword = newPassword });

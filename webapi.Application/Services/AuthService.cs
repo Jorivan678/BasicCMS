@@ -1,4 +1,5 @@
-﻿using webapi.Core.DTOs;
+﻿using webapi.Application.Tools;
+using webapi.Core.DTOs;
 using webapi.Core.DTOs.Usuario;
 using webapi.Core.Exceptions;
 using webapi.Core.Interfaces.Repositories;
@@ -9,12 +10,15 @@ namespace webapi.Application.Services
     internal class AuthService : IAuthService
     {
         private readonly IAuthRepository _authRepository;
+        private readonly IAuthValidator _authValidator;
         private readonly IUsuarioRepository _userRepository;
         private readonly ITokenService _tokenService;
         
-        public AuthService(IUsuarioRepository userRepository, IAuthRepository authRepository, ITokenService tokenService)
+        public AuthService(IUsuarioRepository userRepository, IAuthValidator authValidator,
+            IAuthRepository authRepository, ITokenService tokenService)
         {
             _userRepository = userRepository;
+            _authValidator = authValidator;
             _tokenService = tokenService;
             _authRepository = authRepository;
         }
@@ -27,7 +31,7 @@ namespace webapi.Application.Services
 
         public async Task<TokenResponseDto> LogInAsync(UserLoginRequestDto request)
         {
-            var user = await _userRepository.FindAsync(request.UserName) ?? throw new ForbiddenException("The user doesn't exist.");
+            var user = await _userRepository.FindAsync(request.UserName) ?? throw new ForbiddenException("The user couldn't be found.");
 
             if (!await _authRepository.CheckPasswordAsync(user.Id, request.Password))
                 throw new ForbiddenException("The password is not correct.");
@@ -45,6 +49,9 @@ namespace webapi.Application.Services
 
         public async Task UpdatePasswordAsync(UserPassUpdateDto request)
         {
+            if (!_authValidator.HasId(request.Id))
+                throw new ForbiddenException("You don't have permission to perform this action.");
+
             if (!await _authRepository.CheckPasswordAsync(request.Id, request.OldPassword))
                 throw new ForbiddenException("The attempted password didn't match with current password.");
 

@@ -4,7 +4,7 @@ using webapi.Core.StaticData;
 
 namespace webapi.Infrastructure.Validators.Usuario
 {
-    internal class UserAddRequestValidator : AbstractValidator<UserAddRequestDto>
+    public sealed class UserAddRequestValidator : AbstractValidator<UserAddRequestDto>
     {
         public UserAddRequestValidator() 
         {

@@ -4,7 +4,7 @@ using webapi.Core.StaticData;
 
 namespace webapi.Infrastructure.Validators.Categoria
 {
-    internal class CategoriaAddRequestValidator : AbstractValidator<CategoriaAddRequestDto>
+    public sealed class CategoriaAddRequestValidator : AbstractValidator<CategoriaAddRequestDto>
     {
         public CategoriaAddRequestValidator()
         {

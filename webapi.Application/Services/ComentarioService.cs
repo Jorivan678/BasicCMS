@@ -1,21 +1,25 @@
 ﻿using AutoMapper;
+using webapi.Application.Tools;
 using webapi.Core.DTOs.Comentario.Request;
 using webapi.Core.DTOs.Comentario.Response;
 using webapi.Core.Entities;
 using webapi.Core.Exceptions;
 using webapi.Core.Interfaces.Repositories;
 using webapi.Core.Interfaces.Services;
+using webapi.Core.StaticData;
 
 namespace webapi.Application.Services
 {
     internal class ComentarioService : IComentarioService
     {
         private readonly IComentarioRepository _repository;
+        private readonly IAuthValidator _authValidator;
         private readonly IMapper _mapper;
 
-        public ComentarioService(IComentarioRepository repository, IMapper mapper)
+        public ComentarioService(IComentarioRepository repository, IAuthValidator authValidator, IMapper mapper)
         {
             _repository = repository;
+            _authValidator = authValidator;
             _mapper = mapper;
         }
 
@@ -33,8 +37,16 @@ namespace webapi.Application.Services
 
         public async Task DeleteAsync(int entityId)
         {
+            const string ueExMessage = "The comment could not be deleted, it may have already been deleted or does not exist.";
+
+            var authorId = (await _repository.FindAsync(entityId) 
+                ?? throw new UnprocessableEntityException(ueExMessage)).AutorId;
+
+            if (!_authValidator.HasId(authorId) && !_authValidator.HasRole(Roles.Admin))
+                throw new ForbiddenException("You don't have permission to perform this action.");
+
             if (!await _repository.DeleteAsync(entityId))
-                throw new UnprocessableEntityException("The comment could not be deleted, it may have already been deleted or does not exist.");
+                throw new UnprocessableEntityException(ueExMessage);
         }
 
         public async Task<ComentarioResponseDto> GetAsync(int entityId)
@@ -53,6 +65,9 @@ namespace webapi.Application.Services
 
         public async Task UpdateAsync(ComentarioUpdRequestDto request)
         {
+            if (!_authValidator.HasId(request.AutorId))
+                throw new ForbiddenException("You don't have permission to perform this action.");
+
             var comment = _mapper.Map<ComentarioUpdRequestDto, Comentario>(request);
 
             if (!await _repository.UpdateAsync(comment))

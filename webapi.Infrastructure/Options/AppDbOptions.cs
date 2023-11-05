@@ -9,50 +9,23 @@ namespace webapi.Infrastructure.Options
     /// </summary>
     public sealed class AppDbOptions
     {
-        private readonly IConfiguration _config;
-        private string _connStrKey = null!;
-
-        public AppDbOptions(IConfiguration config)
-        {
-            _config = config;
-        }
+        private string _connStr = null!;
 
         /// <summary>
         /// Gets the connection string.
         /// </summary>
-        public string ConnectionString { 
-            get
-            {
-                var connStr = _config.GetConnectionString(_connStrKey);
-                if (string.IsNullOrWhiteSpace(connStr)) throw new InvalidOperationException("There isn't a connection string ");
-
-                return connStr;
-            }
-        }
+        public string ConnectionString => _connStr;
 
         /// <summary>
-        /// Sets the connection string key for get from the "ConnectionStrings" section in the appsettings.json file.
+        /// Sets the connection string.
         /// </summary>
-        /// <param name="connKey">The name of the connection string key in the specified section of appsettings.json.</param>
-        /// <remarks>
-        /// Here's an example of how to use the SetConnStrKey method:
-        /// <code>
-        /// dbOptions.SetConnStrKey("DbConnection");
-        /// </code>
-        /// Where "DbConnection is in:
-        /// <code>
-        ///   "ConnectionStrings": {
-        ///      "DbConnection": "a connection string"
-        ///    }
-        /// </code>
-        /// </remarks>
+        /// <param name="connectionString"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public void SetConnStrKey([NotNull]string? connKey)
+        public void SetConnectionString([NotNull]string? connectionString)
         {
-            if (string.IsNullOrWhiteSpace(connKey))
-                throw new ArgumentNullException(nameof(connKey), "Connection string key cannot be null or empty.");
+            ArgumentException.ThrowIfNullOrEmpty(connectionString, nameof(connectionString));
 
-            _connStrKey = connKey;
+            _connStr = connectionString;
         }
     }
 }

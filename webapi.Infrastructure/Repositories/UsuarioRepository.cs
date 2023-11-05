@@ -23,16 +23,16 @@ namespace webapi.Infrastructure.Repositories
 
         public async Task<int> CreateAsync(Usuario entity)
         {
-            await using var transact = await _context.Connection.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+            await using var transact = await _context.BeginTransactionAsync(IsolationLevel.ReadCommitted);
             try
             {
                 var parametros = new DynamicParameters(new
                 {
-                    entity.Nombre,
-                    entity.ApellidoP,
-                    entity.ApellidoM,
-                    entity.NombreUsuario,
-                    PasswordNormal = entity.PasswordHash
+                    nombre = entity.Nombre,
+                    apellidop = entity.ApellidoP,
+                    apellidom = entity.ApellidoM,
+                    nombre_usuario = entity.NombreUsuario,
+                    passwordnormal = entity.PasswordHash
                 });
                 parametros.Add("userid", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
@@ -54,36 +54,40 @@ namespace webapi.Infrastructure.Repositories
                 throw new Exception("An error occurred during the registration operation.", ex);
             }
 
-            async Task AssignRoleAsync(int userId, DbTransaction transact)
+            async Task AssignRoleAsync(int userid, DbTransaction transact)
             {
-                const string sql = "SELECT COUNT(*) FROM Usuarios";
+                const string sql = "SELECT COUNT(*) FROM Usuarios WHERE id != @userid";
                 const string sqlRole = "SELECT R.id FROM Roles AS R WHERE R.nombre = @rolName";
                 const string spName = "AsignarRolAUsuario";
 
-                int rows = await _context.Connection.ExecuteScalarAsync<int>(sql);
+                var rows = await _context.Connection.ExecuteScalarAsync<long>(sql, new { userid });
 
                 if (rows > 0)
                 {
-                    int roleId = await _context.Connection.ExecuteScalarAsync<int>(sqlRole, new { rolName = Roles.User });
+                    int rolid = await _context.Connection.ExecuteScalarAsync<int>(sqlRole, new { rolName = Roles.User });
 
-                    var parametros = new DynamicParameters(new { userId, rolId = roleId });
+                    var parametros = new DynamicParameters(new { userid, rolid });
                     parametros.Add("rows_affected", dbType: DbType.Int32, direction: ParameterDirection.Output);
                     await _context.Connection.ExecuteAsync(spName, parametros, transact, commandType: CommandType.StoredProcedure);
                 }
                 else
                 {
-                    int roleId = await _context.Connection.ExecuteScalarAsync<int>(sqlRole, new { rolName = Roles.Admin });
+                    int rolAdminId = await _context.Connection.ExecuteScalarAsync<int>(sqlRole, new { rolName = Roles.Admin });
+                    int rolUserId = await _context.Connection.ExecuteScalarAsync<int>(sqlRole, new { rolName = Roles.User });
 
-                    var parametros = new DynamicParameters(new { userId, rolId = roleId });
-                    parametros.Add("rows_affected", dbType: DbType.Int32, direction: ParameterDirection.Output);
-                    await _context.Connection.ExecuteAsync(spName, parametros, transact, commandType: CommandType.StoredProcedure);
+                    foreach (var rolid in new int[] { rolAdminId, rolUserId } )
+                    {
+                        var parametros = new DynamicParameters(new { userid, rolid });
+                        parametros.Add("rows_affected", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                        await _context.Connection.ExecuteAsync(spName, parametros, transact, commandType: CommandType.StoredProcedure);
+                    }
                 }
             }
         }
 
         public async Task<bool> DeleteAsync(int entityId)
         {
-            await using var transact = await _context.Connection.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+            await using var transact = await _context.BeginTransactionAsync(IsolationLevel.ReadCommitted);
             try
             {
                 const string sql = "DELETE FROM Usuarios WHERE id = @entityId";
@@ -162,10 +166,14 @@ namespace webapi.Infrastructure.Repositories
         {
             try
             {
-                const string sql = @"SELECT id, '' as nombre, '' as apellidop, '' as apellidom, nombreusuario, '' as passwordhash, '' as passwordsalt
-                        FROM Usuarios ORDER BY id DESC";
+                const string sql = @"SELECT U.id, '' as nombre, '' as apellidop, '' as apellidom, U.nombreusuario, '' as passwordhash, '' as passwordsalt
+                        FROM Usuarios AS U
+                        INNER JOIN Usuarios_Roles AS UR ON U.id = UR.usuarioid
+                        INNER JOIN Roles AS R ON R.id = UR.roleid
+						WHERE R.nombre = @roleName
+                        ORDER BY U.id DESC;";
 
-                return await _context.Connection.QueryAsync<Usuario>(sql);
+                return await _context.Connection.QueryAsync<Usuario>(sql, new { roleName = Roles.Editor });
             }
             catch (Exception ex)
             {

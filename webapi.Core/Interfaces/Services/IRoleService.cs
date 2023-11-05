@@ -1,4 +1,5 @@
-﻿using webapi.Core.DTOs.Rol.Request;
+﻿using webapi.Core.Exceptions;
+using webapi.Core.DTOs.Rol.Request;
 using webapi.Core.DTOs.Rol.Response;
 
 namespace webapi.Core.Interfaces.Services
@@ -15,6 +16,7 @@ namespace webapi.Core.Interfaces.Services
         /// Updates the description of a role.
         /// </summary>
         /// <param name="request">Contains update request info.</param>
+        /// <exception cref="UnprocessableEntityException"></exception>
         Task UpdateAsync(RoleUpdRequestDto request);
 
         /// <summary>
@@ -22,6 +24,7 @@ namespace webapi.Core.Interfaces.Services
         /// </summary>
         /// <param name="roleId">The role id.</param>
         /// <returns>An instance of <see cref="RoleResponseDto"/>.</returns>
+        /// <exception cref="NotFoundException"></exception>
         Task<RoleResponseDto> GetRoleAsync(int roleId);
     }
 }

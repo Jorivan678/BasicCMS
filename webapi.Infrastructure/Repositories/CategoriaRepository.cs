@@ -113,7 +113,7 @@ namespace webapi.Infrastructure.Repositories
 
         public async Task<bool> UpdateAsync(Categoria entity)
         {
-            await using var transact = await _context.Connection.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted);
+            await using var transact = await _context.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted);
             try
             {
                 const string sql = "UPDATE Categories SET descripcion = @Descripcion WHERE id = @Id";

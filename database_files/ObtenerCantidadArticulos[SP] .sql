@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION ObtenerCantidadArticulos
 	IN categorias_ varchar[] = null
 )
 RETURNS TABLE (
-	conteo int
+	conteo bigint
 )
 LANGUAGE plpgsql
 AS $$
@@ -22,6 +22,6 @@ BEGIN
 	LEFT JOIN articulos_categorias AS ac ON ar.id = ac.articuloid
 	LEFT JOIN categorias AS c ON c.id = ac.categoriaid
 	WHERE (autorId_ = 0 OR ar.autorid = autorId_)
-	AND (categorias_ IS NULL OR UPPER(c.nombre) = ANY(categorias_))
+	AND (categorias_ IS NULL OR UPPER(c.nombre) = ANY(categorias_));
 END;
 $$;

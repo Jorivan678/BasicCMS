@@ -4,7 +4,7 @@ using webapi.Core.StaticData;
 
 namespace webapi.Infrastructure.Validators.Rol
 {
-    internal class RoleUpdRequestValidator : AbstractValidator<RoleUpdRequestDto>
+    public sealed class RoleUpdRequestValidator : AbstractValidator<RoleUpdRequestDto>
     {
         public RoleUpdRequestValidator()
         {

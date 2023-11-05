@@ -1,4 +1,4 @@
-﻿using webapi.Core.DTOs;
+﻿using webapi.Core.Exceptions;
 using webapi.Core.DTOs.Articulo.Request;
 using webapi.Core.DTOs.Articulo.Response;
 using webapi.Core.Interfaces.Services.Base;
@@ -18,6 +18,7 @@ namespace webapi.Core.Interfaces.Services
         /// Updates an existing article.
         /// </summary>
         /// <param name="request">Contains the update request info.</param>
+        /// <exception cref="UnprocessableEntityException"></exception>
         Task UpdateAsync(ArticuloUpdRequestDto request);
 
         /// <summary>
@@ -36,6 +37,7 @@ namespace webapi.Core.Interfaces.Services
         /// <param name="categories">Different categories that must match with articles. If array length is zero, won't be taken into consideration.</param>
         /// <param name="authorId">The author of the articles.</param>
         /// <returns>Articles count.</returns>
+        /// <exception cref="NotFoundException"></exception>
         Task<int> CountArticlesAsync(string[] categories, int authorId);
     }
 }

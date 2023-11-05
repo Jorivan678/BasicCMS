@@ -1,5 +1,8 @@
 ﻿namespace webapi.Core.DTOs
 {
+    /// <summary>
+    /// Represents the response of an HTTP 400 Bad Request.
+    /// </summary>
     public class ResponseErrorObject
     {
         public ResponseErrorObject(string type, string title, int status, IEnumerable<string> keys, IEnumerable<IEnumerable<string>> messages)

@@ -4,7 +4,7 @@ using webapi.Core.StaticData;
 
 namespace webapi.Infrastructure.Validators.Comentario
 {
-    internal class ComentarioAddRequestValidator : AbstractValidator<ComentarioAddRequestDto>
+    public sealed class ComentarioAddRequestValidator : AbstractValidator<ComentarioAddRequestDto>
     {
         public ComentarioAddRequestValidator()
         {
