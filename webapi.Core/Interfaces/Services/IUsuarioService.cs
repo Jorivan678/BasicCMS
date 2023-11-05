@@ -1,4 +1,5 @@
-﻿using webapi.Core.DTOs.Usuario.Request;
+﻿using webapi.Core.Exceptions;
+using webapi.Core.DTOs.Usuario.Request;
 using webapi.Core.DTOs.Usuario.Response;
 using webapi.Core.Interfaces.Services.Base;
 using webapi.Core.StaticData;
@@ -12,12 +13,16 @@ namespace webapi.Core.Interfaces.Services
         /// </summary>
         /// <param name="request">Contains add request info.</param>
         /// <returns>The new user id.</returns>
+        /// <exception cref="ConflictException"></exception>
         Task<int> RegisterAsync(UserAddRequestDto request);
 
         /// <summary>
         /// Updates user information like username, name and last names.
         /// </summary>
         /// <param name="request">Contains update request info.</param>
+        /// <exception cref="ForbiddenException"></exception>
+        /// <exception cref="ConflictException"></exception>
+        /// <exception cref="UnprocessableEntityException"></exception>
         Task UpdateAsync(UserUpdRequestDto request);
 
         /// <summary>

@@ -1,21 +1,25 @@
 ﻿using AutoMapper;
+using webapi.Application.Tools;
 using webapi.Core.DTOs.Usuario.Request;
 using webapi.Core.DTOs.Usuario.Response;
 using webapi.Core.Entities;
 using webapi.Core.Exceptions;
 using webapi.Core.Interfaces.Repositories;
 using webapi.Core.Interfaces.Services;
+using webapi.Core.StaticData;
 
 namespace webapi.Application.Services
 {
     internal class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _repository;
+        private readonly IAuthValidator _authValidator;
         private readonly IMapper _mapper;
 
-        public UsuarioService(IUsuarioRepository repository, IMapper mapper)
+        public UsuarioService(IUsuarioRepository repository, IAuthValidator authValidator, IMapper mapper)
         {
             _repository = repository;
+            _authValidator = authValidator;
             _mapper = mapper;
         }
 
@@ -26,6 +30,9 @@ namespace webapi.Application.Services
 
         public async Task DeleteAsync(int entityId)
         {
+            if (!_authValidator.HasId(entityId) && !_authValidator.HasRole(Roles.Admin))
+                throw new ForbiddenException("You don't have permission to perform this action.");
+
             if (!await _repository.DeleteAsync(entityId))
                 throw new UnprocessableEntityException("The user could not be deleted, it may have already been deleted or does not exist.");
         }
@@ -63,6 +70,9 @@ namespace webapi.Application.Services
 
         public async Task UpdateAsync(UserUpdRequestDto request)
         {
+            if (!_authValidator.HasId(request.Id))
+                throw new ForbiddenException("You don't have permission to perform this action.");
+
             if (await _repository.UserNameExistsAsync(request.NombreUsuario, request.Id))
                 throw new ConflictException("The user name already exists.");
 

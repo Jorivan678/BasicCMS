@@ -1,0 +1,1 @@
+## Here are some additional data transfer objects in case you don't want to have them in the core.

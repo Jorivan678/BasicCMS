@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
-using webapi.Core.DTOs;
+using webapi.Core.DTOs.Articulo.Request;
 using webapi.Core.DTOs.Categoria.Request;
 using webapi.Core.StaticData;
 using webapi.Infrastructure.Validators.Categoria;
 
 namespace webapi.Infrastructure.Validators.Articulo
 {
-    internal class ArticuloAddRequestValidator : AbstractValidator<ArticuloAddRequestDto>
+    public sealed class ArticuloAddRequestValidator : AbstractValidator<ArticuloAddRequestDto>
     {
         public ArticuloAddRequestValidator()
         {

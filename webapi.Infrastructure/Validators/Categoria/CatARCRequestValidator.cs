@@ -3,7 +3,7 @@ using webapi.Core.DTOs.Categoria.Request;
 
 namespace webapi.Infrastructure.Validators.Categoria
 {
-    internal class CatARCRequestValidator : AbstractValidator<CatARCRequestDto>
+    public sealed class CatARCRequestValidator : AbstractValidator<CatARCRequestDto>
     {
         public CatARCRequestValidator()
         {

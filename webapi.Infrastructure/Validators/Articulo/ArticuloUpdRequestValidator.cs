@@ -6,7 +6,7 @@ using webapi.Infrastructure.Validators.Categoria;
 
 namespace webapi.Infrastructure.Validators.Articulo
 {
-    internal class ArticuloUpdRequestValidator : AbstractValidator<ArticuloUpdRequestDto>
+    public sealed class ArticuloUpdRequestValidator : AbstractValidator<ArticuloUpdRequestDto>
     {
         public ArticuloUpdRequestValidator()
         {

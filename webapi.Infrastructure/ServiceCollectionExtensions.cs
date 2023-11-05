@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
+using webapi.Core.DTOs.Usuario;
 using webapi.Core.Interfaces.Repositories;
 using webapi.Infrastructure.Data;
 using webapi.Infrastructure.Options;

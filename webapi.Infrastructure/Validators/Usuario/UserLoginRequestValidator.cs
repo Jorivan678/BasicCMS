@@ -3,7 +3,7 @@ using webapi.Core.DTOs.Usuario;
 
 namespace webapi.Infrastructure.Validators.Usuario
 {
-    internal class UserLoginRequestValidator : AbstractValidator<UserLoginRequestDto>
+    public sealed class UserLoginRequestValidator : AbstractValidator<UserLoginRequestDto>
     {
         public UserLoginRequestValidator()
         {

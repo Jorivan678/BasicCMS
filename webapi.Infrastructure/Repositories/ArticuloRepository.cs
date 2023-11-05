@@ -182,7 +182,7 @@ namespace webapi.Infrastructure.Repositories
         {
             try
             {
-                const string sql = "SELECT * FROM public.obtenerarticulospaginados(@page, @quantity, 0, UPPER(@categories))";
+                const string sql = "SELECT * FROM public.obtenerarticulospaginados(@page, @quantity, 0, @categories)";
 
                 var articulos = await _context.Connection.QueryAsync<Articulo, Usuario, Articulo>(sql, (ar, u) =>
                 {
@@ -212,7 +212,7 @@ namespace webapi.Infrastructure.Repositories
         {
             try
             {
-                const string sql = "SELECT * FROM public.obtenerarticulospaginados(@page, @quantity, @authorId, UPPER(@categories))";
+                const string sql = "SELECT * FROM public.obtenerarticulospaginados(@page, @quantity, @authorId, @categories)";
 
                 var articulos = await _context.Connection.QueryAsync<Articulo, Usuario, Articulo>(sql, (ar, u) =>
                 {
@@ -240,7 +240,7 @@ namespace webapi.Infrastructure.Repositories
 
         public async Task<bool> UpdateAsync(Articulo entity)
         {
-            await using var transaction = await _context.Connection.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+            await using var transaction = await _context.BeginTransactionAsync(IsolationLevel.ReadCommitted);
             try
             {
                 const string sql = @"UPDATE Articulos SET titulo = @Titulo, contenido = @Contenido WHERE id = @Id";

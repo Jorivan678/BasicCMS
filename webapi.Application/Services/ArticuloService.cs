@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using webapi.Core.DTOs;
 using webapi.Core.DTOs.Articulo.Request;
 using webapi.Core.DTOs.Articulo.Response;
 using webapi.Core.Entities;

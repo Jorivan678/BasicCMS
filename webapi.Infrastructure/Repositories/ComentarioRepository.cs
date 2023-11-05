@@ -35,7 +35,7 @@ namespace webapi.Infrastructure.Repositories
 
         public async Task<int> CreateAsync(Comentario entity)
         {
-            await using var transact = await _context.Connection.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+            await using var transact = await _context.BeginTransactionAsync(IsolationLevel.ReadCommitted);
             try
             {
                 const string sql = @"INSERT INTO Comentarios(texto, fecha_pub, autorid, articuloid)
@@ -62,7 +62,7 @@ namespace webapi.Infrastructure.Repositories
 
         public async Task<bool> DeleteAsync(int entityId)
         {
-            await using var transact = await _context.Connection.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+            await using var transact = await _context.BeginTransactionAsync(IsolationLevel.ReadCommitted);
             try
             {
                 const string sql = "DELETE FROM Comentarios WHERE id = @entityId";
@@ -120,7 +120,7 @@ namespace webapi.Infrastructure.Repositories
 
         public async Task<bool> UpdateAsync(Comentario entity)
         {
-            await using var transact = await _context.Connection.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+            await using var transact = await _context.BeginTransactionAsync(IsolationLevel.ReadCommitted);
             try
             {
                 const string sql = "UPDATE Comentarios SET texto = @Texto WHERE autorid = @AutorId AND id = @Id";

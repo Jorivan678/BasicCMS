@@ -29,7 +29,7 @@ CREATE TABLE Usuarios_Roles(
 	foreign key (RoleId) references Roles(Id)
 		match simple
 		on update no action
-		on delete cascade,
+		on delete cascade
 );
 
 CREATE TABLE Articulos
@@ -81,5 +81,7 @@ CREATE TABLE Comentarios(
 );
 
 INSERT INTO Roles(Nombre, Descripcion) VALUES ('admin', 'Es el administrado del sistema, tiene acceso a todo.');
-INSERT INTO Roles(Nombre, Descripcion) VALUES ('editor', 'Es un usuario normal pero con la característica de que puede crear artículos.');
-INSERT INTO Roles(Nombre, Descripcion) VALUES ('user', 'Es un usuario normal, sin permisos especiales de ningún tipo.');
+INSERT INTO Roles(Nombre, Descripcion) VALUES ('editor', 'Es un usuario normal pero con la caracterÃ­stica de que puede crear artÃ­culos.');
+INSERT INTO Roles(Nombre, Descripcion) VALUES ('user', 'Es un usuario normal, sin permisos especiales de ningÃºn tipo.');
+
+CREATE EXTENSION pgcrypto;

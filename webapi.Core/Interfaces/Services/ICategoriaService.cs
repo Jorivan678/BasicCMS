@@ -1,4 +1,5 @@
-﻿using webapi.Core.DTOs.Categoria.Request;
+﻿using webapi.Core.Exceptions;
+using webapi.Core.DTOs.Categoria.Request;
 using webapi.Core.DTOs.Categoria.Response;
 using webapi.Core.Interfaces.Services.Base;
 
@@ -11,12 +12,15 @@ namespace webapi.Core.Interfaces.Services
         /// </summary>
         /// <param name="request">Contains the add request info.</param>
         /// <returns>The new category id.</returns>
+        /// <exception cref="ConflictException"></exception>
         Task<int> CreateAsync(CategoriaAddRequestDto request);
 
         /// <summary>
         /// Updates an existing category.
         /// </summary>
         /// <param name="request">Contains the update request info.</param>
+        /// <exception cref="ConflictException"></exception>
+        /// <exception cref="UnprocessableEntityException"></exception>
         Task UpdateAsync(CategoriaUpdRequestDto request);
 
         /// <summary>
