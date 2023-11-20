@@ -17,5 +17,11 @@ namespace webapi.Core.Entities
         public string PasswordSalt { get; set; } = null!;
 
         public ICollection<Rol> Roles { get; set; } = null!;
+
+        public ICollection<Imagen> Imagenes { get; set; } = null!;
+
+        public ICollection<Articulo> Articulos { get; set; } = null!;
+
+        public ICollection<Comentario> Comentarios { get; set; } = null!;
     }
 }

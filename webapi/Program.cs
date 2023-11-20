@@ -34,7 +34,8 @@ namespace webapi
             builder.Services.AddTokenService(o => o.SetSectionName("JWT"));
             builder.Services.AddAuthJwtBearer(tokenVal =>
             {
-                tokenVal.ValidateIssuer = false;
+                tokenVal.ValidateIssuer = builder.Configuration.GetValue<bool>("JWT:ValidateIssuer");
+                tokenVal.ValidIssuer = builder.Configuration["JWT:Issuer"];
                 tokenVal.ValidateAudience = false;
                 tokenVal.ValidateLifetime = true;
                 tokenVal.ValidateIssuerSigningKey = true;
@@ -59,7 +60,6 @@ namespace webapi
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
-
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
@@ -67,6 +67,8 @@ namespace webapi
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.MapFallbackToFile("/index.html");
 
             app.Run();
         }

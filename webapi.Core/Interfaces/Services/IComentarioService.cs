@@ -1,7 +1,7 @@
 ﻿using webapi.Core.Exceptions;
 using webapi.Core.DTOs.Comentario.Request;
 using webapi.Core.DTOs.Comentario.Response;
-using webapi.Core.Interfaces.Services.Base;
+using webapi.Core.Interfaces.Base;
 
 namespace webapi.Core.Interfaces.Services
 {

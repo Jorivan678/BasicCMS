@@ -43,7 +43,7 @@ namespace webapi.Controllers
             return Ok(result);
         }
 
-        [HttpPut]
+        [HttpPut("edit")]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ResponseErrorObject), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ResponseObject), StatusCodes.Status422UnprocessableEntity)]

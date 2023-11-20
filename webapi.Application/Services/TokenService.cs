@@ -36,7 +36,7 @@ namespace webapi.Application.Services
                 Issuer = _configuration.GetValue<string>("Issuer"),
                 IssuedAt = DateTime.UtcNow,
                 Subject = claims,
-                Expires = DateTime.UtcNow.AddHours(_configuration.GetValue<double>("ExpiresInHours")),
+                Expires = DateTime.UtcNow.AddMinutes(_configuration.GetValue<double>("ExpiresInMinutes")),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

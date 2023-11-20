@@ -7,6 +7,7 @@ using webapi.Application.Tools.Implementations;
 using webapi.Application.Tools;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http;
 
 namespace webapi.Application
 {
@@ -74,6 +75,7 @@ namespace webapi.Application
         private static IServiceCollection AddServices(this IServiceCollection services)
             => services.AddScoped<IArticuloService, ArticuloService>().AddScoped<IAuthService, AuthService>()
             .AddScoped<ICategoriaService, CategoriaService>().AddScoped<IComentarioService, ComentarioService>()
-            .AddScoped<IRoleService, RoleService>().AddScoped<IUsuarioService, UsuarioService>();
+            .AddScoped<IRoleService, RoleService>().AddScoped<IUsuarioService, UsuarioService>()
+            .AddScoped<IImagenService<IFormFile>, ImagenService>().AddScoped<IFileTool, FileTool>();
     }
 }

@@ -11,10 +11,7 @@ namespace webapi.Application.Mapping
         {
             CreateMap<Usuario, UserResponseDto>();
             CreateMap<UserAddRequestDto, Usuario>()
-                .AfterMap((src, dst) =>
-                {
-                    dst.PasswordHash = src.Password;
-                });
+                .AfterMap((src, dst) => dst.PasswordHash = src.Password);
 
             CreateMap<UserUpdRequestDto, Usuario>();
         }

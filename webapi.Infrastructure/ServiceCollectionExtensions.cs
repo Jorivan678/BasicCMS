@@ -45,6 +45,6 @@ namespace webapi.Infrastructure
             => services.AddScoped<IArticuloRepository, ArticuloRepository>()
                 .AddScoped<IAuthRepository, AuthRepository>().AddScoped<ICategoriaRepository, CategoriaRepository>()
                 .AddScoped<IComentarioRepository, ComentarioRepository>().AddScoped<IRoleRepository, RoleRepository>()
-                .AddScoped<IUsuarioRepository, UsuarioRepository>();
+                .AddScoped<IUsuarioRepository, UsuarioRepository>().AddScoped<IImagenRepository, ImagenRepository>();
     }
 }

@@ -43,5 +43,10 @@
         /// User name maximum length.
         /// </summary>
         public const int UserNameMaxLength = 50;
+
+        /// <summary>
+        /// Image title maximum length.
+        /// </summary>
+        public const int ImageTitleMaxLength = 50;
     }
 }

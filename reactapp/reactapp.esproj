@@ -10,4 +10,9 @@
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="src\components\landing\" />
+    <Folder Include="src\models\Response\" />
+    <Folder Include="src\models\Request\" />
+  </ItemGroup>
 </Project>

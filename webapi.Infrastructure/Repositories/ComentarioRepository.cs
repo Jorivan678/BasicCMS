@@ -90,9 +90,16 @@ namespace webapi.Infrastructure.Repositories
         {
             try
             {
-                const string sql = @"SELECT * FROM Comentarios WHERE id = @entityId";
+                const string sql = @"SELECT C.*, false as split, U.id, '' as nombre, '' as apellidop, '' as apellidom, U.nombreusuario, '' as passwordhash, '' as passwordsalt
+}                       FROM Comentarios AS C 
+                        INNER JOIN Usuarios AS U ON U.id = C.autorid
+                        WHERE id = @entityId";
 
-                return await _context.Connection.QueryFirstOrDefaultAsync<Comentario>(sql, new { entityId });
+                return (await _context.Connection.QueryAsync<Comentario, Usuario, Comentario>(sql, (comment, user) =>
+                {
+                    comment.Autor = user;
+                    return comment;
+                }, new { entityId }, splitOn: "split")).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -107,9 +114,15 @@ namespace webapi.Infrastructure.Repositories
             {
                 const string sql = @"SELECT C.*, false as split, U.id, '' as nombre, '' as apellidop, '' as apellidom, U.nombreusuario, '' as passwordhash, '' as passwordsalt
                     FROM Comentarios AS C
-                    INNER JOIN Usuarios AS U ON U.id = C.autorid";
+                    INNER JOIN Usuarios AS U ON U.id = C.autorid
+                    WHERE C.articuloid = @articleId
+                    ORDER BY id DESC LIMIT @quantity OFFSET (@page - 1) * @quantity";
 
-                return await _context.Connection.QueryAsync<Comentario>(sql, new { page, quantity, articleId });
+                return await _context.Connection.QueryAsync<Comentario, Usuario, Comentario>(sql, (comment, user) =>
+                {
+                    comment.Autor = user;
+                    return comment;
+                }, new { page, quantity, articleId }, splitOn: "split");
             }
             catch (Exception ex)
             {

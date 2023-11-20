@@ -1,8 +1,8 @@
 ﻿using webapi.Core.Exceptions;
 using webapi.Core.DTOs.Usuario.Request;
 using webapi.Core.DTOs.Usuario.Response;
-using webapi.Core.Interfaces.Services.Base;
 using webapi.Core.StaticData;
+using webapi.Core.Interfaces.Base;
 
 namespace webapi.Core.Interfaces.Services
 {

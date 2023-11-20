@@ -1,6 +1,6 @@
 ﻿using webapi.Core.Entities;
 using webapi.Core.StaticData;
-using webapi.Core.Interfaces.Repositories.Base;
+using webapi.Core.Interfaces.Base;
 
 namespace webapi.Core.Interfaces.Repositories
 {

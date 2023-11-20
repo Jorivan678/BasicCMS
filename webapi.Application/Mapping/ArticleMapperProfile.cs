@@ -11,7 +11,8 @@ namespace webapi.Application.Mapping
         {
             CreateMap<Articulo, ArticuloResponseDto>();
 
-            CreateMap<ArticuloAddRequestDto, Articulo>();
+            CreateMap<ArticuloAddRequestDto, Articulo>()
+                .AfterMap((src, dst) => dst.Fecha_Pub = DateTimeOffset.UtcNow);
 
             CreateMap<ArticuloUpdRequestDto, Articulo>();
         }
