@@ -3,7 +3,7 @@ import { UserResponse } from "./UserResponse";
 export interface ImagenResponse
 {
     id: number;
-    titulo: string;
+    titulo_Imagen: string;
     ruta: string;
     alto: number;
     ancho: number;

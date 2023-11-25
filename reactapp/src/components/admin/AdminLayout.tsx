@@ -1,6 +1,9 @@
 import React from "react";
 import { AdminNavbarLayout } from "./AdminNavbarLayout";
-import { ClearScripts, ClearStyles, Dictionary, ReadOnlyDictionary, adminCommonStyles } from "../../generalUtils";
+import {
+    AreScriptsAndStylesSet, ClearScripts,
+    ClearStyles, Dictionary, ReadOnlyDictionary, adminCommonStyles
+} from "../../generalUtils";
 import { AdminMainHeader } from "./AdminMainHeader";
 import { AdminFooter } from "./AdminFooter";
 
@@ -11,12 +14,7 @@ interface AdminLayoutProps
     stylesDir: Dictionary<string, string>;
 }
 
-interface AdminLayoutState
-{
-    wasAlreadyRendered: boolean;
-}
-
-export class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState>
+export class AdminLayout extends React.Component<AdminLayoutProps>
 {
     private static scripts: ReadOnlyDictionary<string, string> = [
         { key: 'psjs', value: '/assets/admin/vendors/perfect-scrollbar/perfect-scrollbar.min.js' },
@@ -24,18 +22,11 @@ export class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutSt
         { key: 'mainjs', value: '/assets/admin/js/main.js' }
     ];
 
-    constructor(props: AdminLayoutProps) {
-        super(props);
-
-        this.state = { wasAlreadyRendered: false };
-    }
-
     componentDidMount() {
-        if (!this.state.wasAlreadyRendered) {
-            document.title = 'BasicCMS - Admin';
+        document.title = 'BasicCMS - Admin';
+        if (!AreScriptsAndStylesSet('admin')) {
             this.setExternalStyles();
             this.setExternalScripts();
-            this.setState((prevState) => ({ wasAlreadyRendered: !prevState.wasAlreadyRendered }));
         }
     }
 
@@ -62,8 +53,8 @@ export class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutSt
     }
 
     componentWillUnmount() {
-        ClearScripts();
-        ClearStyles();
+        ClearScripts('admin');
+        ClearStyles('admin');
     }
 
     render(): React.JSX.Element {

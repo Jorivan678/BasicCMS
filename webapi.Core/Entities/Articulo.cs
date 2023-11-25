@@ -10,9 +10,13 @@ namespace webapi.Core.Entities
 
         public DateTimeOffset Fecha_Pub { get; set; }
 
+        public int ImagenId { get; set; }
+
         public int AutorId { get; set; }
 
         public Usuario Autor { get; set; } = null!;
+
+        public Imagen Imagen { get; set; } = null!;
 
         public ICollection<Categoria> Categorias { get; set; } = null!;
 

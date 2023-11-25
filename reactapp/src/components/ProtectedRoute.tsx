@@ -4,7 +4,7 @@ import { JWTClaims } from '../generalUtils';
 
 interface ProtectedRouteProps
 {
-    user: JWTClaims;
+    claims: JWTClaims;
     useSpecificRoles?: boolean;
     specificRoles?: string[];
     mustHaveAllRoles?: boolean;
@@ -23,13 +23,13 @@ export class ProtectedRoute extends React.Component<ProtectedRouteProps>
         if (!this.props.mustHaveAllRoles) {
             hasSpecificRoles = false;
             this.props.specificRoles?.forEach((role) => {
-                hasSpecificRoles = this.props.user.role.includes(role) || hasSpecificRoles;
+                hasSpecificRoles = this.props.claims.role.includes(role) || hasSpecificRoles;
             });
         }
         else {
             hasSpecificRoles = true;
             this.props.specificRoles?.forEach((role) => {
-                hasSpecificRoles = hasSpecificRoles && this.props.user.role.includes(role);
+                hasSpecificRoles = hasSpecificRoles && this.props.claims.role.includes(role);
             });
         }
 
@@ -40,7 +40,7 @@ export class ProtectedRoute extends React.Component<ProtectedRouteProps>
     }
 
     render(): React.JSX.Element | React.ReactNode {
-        if (this.props.user.exp == 0) {
+        if (this.props.claims.exp == 0) {
             return <Navigate to="/login" replace={true} />;
         }
 

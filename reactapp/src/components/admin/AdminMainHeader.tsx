@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useLogOut } from "../../generalUtils";
+import { AllRoles, JWTClaims, useLogOut } from "../../generalUtils";
 import { UserResponse } from "../../models";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { Link } from "react-router-dom";
 
 /**
  * The header that goes after the NavBar but within the main div body of the page.
- * @returns
  */
 export function AdminMainHeader(): React.JSX.Element
 {
     const user = useSelector<RootState, UserResponse>((state) => state.user);
+    const claims = useSelector<RootState, JWTClaims>((state) => state.claims);
     const [isDropdownOpen, setState] = useState<boolean>(false);
     const divUserDropdown = useRef<HTMLDivElement>(null);
     const logOut = useLogOut();
@@ -67,7 +68,12 @@ export function AdminMainHeader(): React.JSX.Element
                                 <div className="user-menu d-flex">
                                     <div className="user-name text-end me-3">
                                         <h6 className="mb-0 text-gray-600">{`${user.nombre} ${user.apellidoP} ${user.apellidoM}`}</h6>
-                                        <p className="mb-0 text-sm text-gray-600">Administrator</p>
+                                        {claims.role.includes(AllRoles['Admin']) && claims.role.includes(AllRoles['Editor'])
+                                            ? <p className="mb-0 text-sm text-gray-600">Administrator</p> : null}
+                                        {claims.role.includes(AllRoles['Admin']) && !claims.role.includes(AllRoles['Editor'])
+                                            ? <p className="mb-0 text-sm text-gray-600">Administrator</p> : null}
+                                        {!claims.role.includes(AllRoles['Admin']) && claims.role.includes(AllRoles['Editor'])
+                                            ? <p className="mb-0 text-sm text-gray-600">Editor</p> : null}
                                     </div>
                                     <div className="user-img d-flex align-items-center">
                                         <div className="avatar avatar-md">
@@ -80,12 +86,8 @@ export function AdminMainHeader(): React.JSX.Element
                                 <li>
                                     <h6 className="dropdown-header">Hello, @{user.nombreUsuario}!</h6>
                                 </li>
-                                <li><a className="dropdown-item" href="#"><i className="icon-mid bi bi-person me-2"></i> My
-                                    Profile</a></li>
-                                <li><a className="dropdown-item" href="#"><i className="icon-mid bi bi-gear me-2"></i>
-                                    Settings</a></li>
-                                <li><a className="dropdown-item" href="#"><i className="icon-mid bi bi-wallet me-2"></i>
-                                    Wallet</a></li>
+                                <li><Link className="dropdown-item" to="/profile"><i className="icon-mid bi bi-person me-2"></i> My
+                                    Profile</Link></li>
                                 <li>
                                     <hr className="dropdown-divider" />
                                 </li>

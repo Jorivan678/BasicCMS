@@ -15,7 +15,7 @@ export class Register extends React.Component<RegisterProps, AuthGeneralState>
     }
 
     componentWillUnmount() {
-        ClearStyles();
+        ClearStyles('admin');
     }
 
     render(): React.JSX.Element {

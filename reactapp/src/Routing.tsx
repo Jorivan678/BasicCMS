@@ -1,6 +1,9 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { AdminHome, Error404, LandingHome, Login, Register } from './modules';
+import {
+    AdminHome, Error403, Error404, Error500,
+    LandingHome, Login, Register
+} from './modules';
 import { AllRoles, JWTClaims } from './generalUtils';
 import { AuthVerify, ProtectedRoute } from './components';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,7 +24,7 @@ export default function Routing(): React.JSX.Element
                 <Route path="/" Component={LandingHome} />
                 {/* Admin area */}
                 <Route path="/admin/home" element={<ProtectedRoute
-                    redirectPath="/" useSpecificRoles={true} user={claims} mustHaveAllRoles={false}
+                    redirectPath="/unauthorized" useSpecificRoles={true} claims={claims} mustHaveAllRoles={false}
                     specificRoles={[AllRoles['Admin'], AllRoles['Editor']]}>
                     <AdminHome />
                 </ProtectedRoute>} />
@@ -33,7 +36,9 @@ export default function Routing(): React.JSX.Element
                     isLoggedIn={isLoggedIn} />} />
                 <Route path="/register" element={<Register isLoggedIn={isLoggedIn} />} />
                 {/* Manage error routes */}
+                <Route path="/unauthorized" Component={Error403} />
                 <Route path="*" Component={Error404} />
+                <Route path="/error" Component={Error500} />
             </Routes>
             <AuthVerify />
             <ToastContainer />

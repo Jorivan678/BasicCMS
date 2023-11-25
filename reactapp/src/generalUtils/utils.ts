@@ -11,10 +11,31 @@ export const adminCommonStyles: ReadOnlyDictionary<string, string> = [
 ];
 
 /**
- * Clears all styles added dynamically to the DOM by the component.
+ * Checks if there are scripts and/or styles already rendered in the DOM by a component.
+ * @param type The type refers to the type of assets where there are 2 options: 'admin' or 'landing'.
+ * @param justScripts Sets if you want to know just about if there are scripts rendered. Default is false.
+ * @param justStyles Sets if you want to know just about if there are styles rendered. Default is false.
  */
-export function ClearStyles() {
-    const existingStyles = document.querySelectorAll('link[rel="stylesheet"]');
+export function AreScriptsAndStylesSet(type: string, justScripts: boolean = false, justStyles: boolean = false) {
+    if ((!justScripts && !justStyles) || (justScripts && justStyles)) {
+        const existingStyles = document.querySelectorAll(`link[href^="/assets/${type}"]`);
+        const scriptElements = document.querySelectorAll(`script[src^="/assets/${type}"]`);
+        return existingStyles.length > 0 && scriptElements.length > 0;
+    } else if (justScripts && !justStyles) {
+        const scriptElements = document.querySelectorAll(`script[src^="/assets/${type}"]`);
+        return scriptElements.length > 0;
+    } else if (!justScripts && justStyles) {
+        const existingStyles = document.querySelectorAll(`link[href^="/assets/${type}"]`);
+        return existingStyles.length > 0;
+    }
+}
+
+/**
+ * Clears all styles added dynamically to the DOM by the component.
+ * @param type The type refers to the type of assets where there are 2 options: 'admin' or 'landing'.
+ */
+export function ClearStyles(type: string) {
+    const existingStyles = document.querySelectorAll(`link[href^="/assets/${type}"]`);
     existingStyles.forEach(style => {
         style.parentNode?.removeChild(style);
     });
@@ -22,9 +43,10 @@ export function ClearStyles() {
 
 /**
  * Clears all scripts added dynamically to the DOM by the component.
+ * @param type The type refers to the type of assets where there are 2 options: 'admin' or 'landing'.
  */
-export function ClearScripts() {
-    const scriptElements = document.querySelectorAll('script[src^="/assets"]');
+export function ClearScripts(type: string) {
+    const scriptElements = document.querySelectorAll(`script[src^="/assets/${type}"]`);
     scriptElements.forEach((element) => {
         element.parentNode?.removeChild(element);
     });

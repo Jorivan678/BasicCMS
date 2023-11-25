@@ -3,7 +3,7 @@ import { useNavigate} from "react-router";
 import { authTokenName } from "./utils";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
-import { removeClaims} from "../redux";
+import { removeClaims, removeUser, setLoginState} from "../redux";
 
 /**
  * Deletes the authentication token.
@@ -22,6 +22,8 @@ export function useLogOut() {
     return useCallback(() => {
         GetRidOfToken();
         dispatch(removeClaims());
+        dispatch(removeUser());
+        dispatch(setLoginState(false));
 
         navigate('/', { replace: true });
     }, [navigate, dispatch]);

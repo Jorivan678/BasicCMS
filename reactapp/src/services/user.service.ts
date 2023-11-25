@@ -74,7 +74,7 @@ class UserService implements IUserService
     GetAsync(page: number, size: number): Promise<ResponseObject | UserResponse[]>;
     GetAsync(id: number): Promise<UserResponse | ResponseObject>;
     GetAsync(page: number, size?: number): Promise<ResponseObject | UserResponse[]> | Promise<UserResponse | ResponseObject> {
-        if (size) {
+        if (size != undefined) {
             return this.GetPaginatedAsync(page, size);
         }
         return this.GetByIdAsync(page);

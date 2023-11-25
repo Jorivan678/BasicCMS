@@ -7,7 +7,7 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF artid <= 0 THEN
-        RAISE EXCEPTION 'El id del artículo no puede ser 0 o menor.';
+        RAISE EXCEPTION 'The article id cannot be less than or equal to 0.';
     ELSE
         RETURN QUERY
         SELECT C.*

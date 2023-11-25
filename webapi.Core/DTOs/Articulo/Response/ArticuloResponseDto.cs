@@ -1,4 +1,5 @@
 ﻿using webapi.Core.DTOs.Categoria.Response;
+using webapi.Core.DTOs.Imagen.Response;
 using webapi.Core.DTOs.Usuario.Response;
 
 namespace webapi.Core.DTOs.Articulo.Response
@@ -15,7 +16,11 @@ namespace webapi.Core.DTOs.Articulo.Response
 
         public int AutorId { get; set; }
 
+        public int ImagenId { get; set; }
+
         public UserResponseDto Autor { get; set; } = null!;
+
+        public ImagenResponseDto Imagen { get; set; } = null!;
 
         public ICollection<CategoriaResponseDto> Categorias { get; set; } = null!;
     }

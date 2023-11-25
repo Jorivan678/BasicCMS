@@ -4,7 +4,7 @@ namespace webapi.Core.Entities
 {
     public class Imagen : BaseEntity
     {
-        public string Titulo { get; set; } = null!;
+        public string Titulo_Imagen { get; set; } = null!;
 
         public string Ruta { get; set; } = null!;
 
@@ -17,5 +17,7 @@ namespace webapi.Core.Entities
         public int UsuarioId { get; set; }
 
         public Usuario Usuario { get; set; } = null!;
+
+        public ICollection<Articulo> Articulos { get; set; } = null!;
     }
 }

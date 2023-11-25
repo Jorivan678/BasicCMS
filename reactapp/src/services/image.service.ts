@@ -68,7 +68,7 @@ class ImageService implements IImageService
     GetAsync(page: number, size: number): Promise<ResponseObject | ImagenResponse[]>;
     GetAsync(id: number): Promise<ImagenResponse | ResponseObject>;
     GetAsync(page: number, size?: number): Promise<ResponseObject | ImagenResponse[]> | Promise<ImagenResponse | ResponseObject> {
-        if (size) {
+        if (size != undefined) {
             return this.GetPaginatedAsync(page, size);
         }
         return this.GetByIdAsync(page);

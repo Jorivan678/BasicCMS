@@ -1,8 +1,6 @@
 -- Database: BasicCMS
 
 -- Hora de crear procesos almacenados.
--- La columna 'split' solo sirve para indicarle a dapper donde debe empezar el mapeo
--- de otra entidad (tabla).
 
 CREATE OR REPLACE FUNCTION ObtenerCantidadArticulos
 (

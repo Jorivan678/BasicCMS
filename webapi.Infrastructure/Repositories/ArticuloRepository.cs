@@ -124,22 +124,7 @@ namespace webapi.Infrastructure.Repositories
             {
                 const string sql = "SELECT * FROM public.obtenerarticulospaginados(@page, @quantity)";
 
-                var articulos = await _context.Connection.QueryAsync<Articulo, Usuario, Articulo>(sql, (ar, u) =>
-                {
-                    u.Id = ar.AutorId;
-                    ar.Autor = u;
-                    ar.Categorias = new List<Categoria>();
-                    return ar;
-                }, new { page, quantity }, splitOn: "split");
-
-                foreach (var articulo in articulos)
-                {
-                    var categorias = await GetCategoriasAsync(articulo.Id);
-
-                    (articulo.Categorias as List<Categoria>)!.AddRange(categorias);
-                }
-
-                return articulos;
+                return await GetArticulosAsync(sql, new { page, quantity });
             }
             catch (Exception ex)
             {
@@ -154,22 +139,7 @@ namespace webapi.Infrastructure.Repositories
             {
                 const string sql = "SELECT * FROM public.obtenerarticulospaginados(@page, @quantity, @authorId)";
 
-                var articulos = await _context.Connection.QueryAsync<Articulo, Usuario, Articulo>(sql, (ar, u) =>
-                {
-                    u.Id = ar.AutorId;
-                    ar.Autor = u;
-                    ar.Categorias = new List<Categoria>();
-                    return ar;
-                }, new { page, quantity, authorId }, splitOn: "split");
-
-                foreach (var articulo in articulos)
-                {
-                    var categorias = await GetCategoriasAsync(articulo.Id);
-
-                    (articulo.Categorias as List<Categoria>)!.AddRange(categorias);
-                }
-
-                return articulos;
+                return await GetArticulosAsync(sql, new { page, quantity, authorId });
             }
             catch (Exception ex)
             {
@@ -184,22 +154,7 @@ namespace webapi.Infrastructure.Repositories
             {
                 const string sql = "SELECT * FROM public.obtenerarticulospaginados(@page, @quantity, 0, @categories)";
 
-                var articulos = await _context.Connection.QueryAsync<Articulo, Usuario, Articulo>(sql, (ar, u) =>
-                {
-                    u.Id = ar.AutorId;
-                    ar.Autor = u;
-                    ar.Categorias = new List<Categoria>();
-                    return ar;
-                }, new { page, quantity, categories }, splitOn: "split");
-
-                foreach (var articulo in articulos)
-                {
-                    var categorias = await GetCategoriasAsync(articulo.Id);
-
-                    (articulo.Categorias as List<Categoria>)!.AddRange(categorias);
-                }
-
-                return articulos;
+                return await GetArticulosAsync(sql, new { page, quantity, categories });
             }
             catch (Exception ex)
             {
@@ -214,22 +169,7 @@ namespace webapi.Infrastructure.Repositories
             {
                 const string sql = "SELECT * FROM public.obtenerarticulospaginados(@page, @quantity, @authorId, @categories)";
 
-                var articulos = await _context.Connection.QueryAsync<Articulo, Usuario, Articulo>(sql, (ar, u) =>
-                {
-                    u.Id = ar.AutorId;
-                    ar.Autor = u;
-                    ar.Categorias = new List<Categoria>();
-                    return ar;
-                }, new { page, quantity, authorId, categories }, splitOn: "split");
-
-                foreach (var articulo in articulos)
-                {
-                    var categorias = await GetCategoriasAsync(articulo.Id);
-
-                    (articulo.Categorias as List<Categoria>)!.AddRange(categorias);
-                }
-
-                return articulos;
+                return await GetArticulosAsync(sql, new { page, quantity, authorId, categories });
             }
             catch (Exception ex)
             {
@@ -359,11 +299,39 @@ namespace webapi.Infrastructure.Repositories
         /// </summary>
         /// <param name="articuloId">Article related.</param>
         /// <returns>A list of categories.</returns>
-        private async Task<IEnumerable<Categoria>> GetCategoriasAsync(int articuloId)
+        private Task<IEnumerable<Categoria>> GetCategoriasAsync(int articuloId)
         {
             const string sql = "SELECT * FROM ObtenerCategoriasPorArticuloId(@articuloId)";
 
-            return await _context.Connection.QueryAsync<Categoria>(sql, new { articuloId });
+            return _context.Connection.QueryAsync<Categoria>(sql, new { articuloId });
+        }
+
+        /// <summary>
+        /// Handles the mapping logic for retrieving multiple articles.
+        /// </summary>
+        /// <param name="sql">SQL Query Statement.</param>
+        /// <param name="params_">Parameters for the <paramref name="sql"/> statement.</param>
+        /// <returns>A list of <see cref="Articulo"/>.</returns>
+        private async Task<IEnumerable<Articulo>> GetArticulosAsync(string sql, object params_)
+        {
+            var articles = await _context.Connection.QueryAsync<Articulo, Usuario, Imagen, Articulo>(sql, (ar, u, image) =>
+            {
+                u.Id = ar.AutorId;
+                image.Id = ar.ImagenId;
+                ar.Autor = u;
+                ar.Imagen = image;
+                ar.Categorias = new List<Categoria>();
+                return ar;
+            }, params_, splitOn: "split_author, split_image");
+
+            foreach (var articulo in articles)
+            {
+                var categorias = await GetCategoriasAsync(articulo.Id);
+
+                (articulo.Categorias as List<Categoria>)!.AddRange(categorias);
+            }
+
+            return articles;
         }
     }
 }

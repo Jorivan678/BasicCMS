@@ -41,12 +41,14 @@ namespace webapi.Infrastructure.Filters
             }
         }
 
+        private static readonly string[] keys = ["Error"];
+
         protected virtual void HandleBusinessException(ExceptionContext excontext)
         {
             var ex = (excontext.Exception as BusinessException)!;
 
             var validation = !ex.HasKeysAndValues
-                ? new ResponseErrorObject("Validation", "Bad Request", StatusCodes.Status400BadRequest, new string[] { "Error" }, new IEnumerable<string>[] { new string[] { ex.Message } })
+                ? new ResponseErrorObject("Validation", "Bad Request", StatusCodes.Status400BadRequest, keys, new IEnumerable<string>[] { new string[] { ex.Message } })
                 : new ResponseErrorObject("Validation", "Bad Request", StatusCodes.Status400BadRequest, ex.Keys, ex.Values);
 
             excontext.Result = new BadRequestObjectResult(validation);

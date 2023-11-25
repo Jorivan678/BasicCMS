@@ -68,7 +68,7 @@ class CategoryService implements ICategoryService
     GetAsync(page: number, size: number): Promise<ResponseObject | CategoriaResponse[]>;
     GetAsync(id: number): Promise<CategoriaResponse | ResponseObject>;
     GetAsync(page: number, size?: number): Promise<ResponseObject | CategoriaResponse[]> | Promise<CategoriaResponse | ResponseObject> {
-        if (size) {
+        if (size != undefined) {
             return this.GetPaginatedAsync(page, size);
         }
         return this.GetByIdAsync(page);

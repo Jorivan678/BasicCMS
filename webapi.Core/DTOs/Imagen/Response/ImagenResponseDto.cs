@@ -6,7 +6,7 @@ namespace webapi.Core.DTOs.Imagen.Response
     {
         public int Id { get; set; }
 
-        public string Titulo { get; set; } = null!;
+        public string Titulo_Imagen { get; set; } = null!;
 
         public string Ruta { get; set; } = null!;
 

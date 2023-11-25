@@ -35,7 +35,7 @@ export class Login extends Component<LoginProps, AuthGeneralState>
     }
 
     componentWillUnmount() {
-        ClearStyles();
+        ClearStyles('admin');
     }
 
     private handleSubmit = async (event: React.FormEvent) => {

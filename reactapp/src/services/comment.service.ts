@@ -69,7 +69,7 @@ class CommentService implements ICommentService
     GetAsync(articleId: number, page: number, size: number): Promise<ResponseObject | ComentarioResponse[]>;
     GetAsync(id: number): Promise<ComentarioResponse | ResponseObject>;
     GetAsync(articleId: number, page?: number, size?: number): Promise<ResponseObject | ComentarioResponse[]> | Promise<ComentarioResponse | ResponseObject> {
-        if (size && page) {
+        if (size != undefined && page != undefined) {
             return this.GetPaginatedAsync(articleId, page, size);
         }
         return this.GetByIdAsync(articleId);

@@ -8,10 +8,10 @@ but I won't be responsible for what happens if you use this project.
 
 ## This project uses the following technologies:
 
-- ASP.NET Core (.NET 7)
+- ASP.NET Core (.NET 8)
 
 - PostgreSQL
 
-- React (Typescript)
+- React (TypeScript)
 
 > This project doesn't use code first, instead, as you can see, it uses database first and dapper in the infrastructure.

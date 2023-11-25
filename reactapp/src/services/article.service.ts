@@ -72,7 +72,7 @@ class ArticleService implements IArticleService
     GetAsync(page: number, size: number, categories: string[], authorId: number): Promise<ResponseObject | ArticuloResponse[]>;
     GetAsync(id: number): Promise<ArticuloResponse | ResponseObject>;
     GetAsync(page: number, size?: number, categories?: string[], authorId?: number): Promise<ResponseObject | ArticuloResponse[]> | Promise<ArticuloResponse | ResponseObject> {
-        if (size && categories && authorId) {
+        if (size && categories && authorId != undefined) {
             return this.GetPaginatedAsync(page, size, categories, authorId);
         }
         return this.GetByIdAsync(page);

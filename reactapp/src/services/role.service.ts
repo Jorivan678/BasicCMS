@@ -44,7 +44,7 @@ class RoleService implements IRoleService
 
     GetAsync(id?: number): Promise<ResponseObject | RoleResponse[]> | Promise<RoleResponse | ResponseObject>
     {
-        if (id) {
+        if (id != undefined) {
             return this.GetByIdAsync(id);
         }
         return this.GetAllAsync();
